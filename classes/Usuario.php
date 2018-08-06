@@ -37,6 +37,7 @@ class Usuario {
            ":ID"=>$id 
         ));
         
+        
         if (count($results) > 0) {
             $row = $results[0];
             
@@ -44,6 +45,45 @@ class Usuario {
             $this->setusuario($row['usuario']);
             $this->setSenha($row['senha']);
             //$this->dtCadastro(new DateTime($row['dtcadastro']));
+        }
+        
+    }
+    
+    
+    public static function getList(){
+        
+        $sql = new Sql();
+        
+        return $results = $sql->select("SELECT * FROM usuarios ORDER BY usuario ASC");
+        
+    }
+    
+    public static function search($usuario){
+        $sql = new Sql();
+        
+        return $results = $sql->select("SELECT * FROM usuarios WHERE usuario LIKE :USUARIO", array(
+            ":USUARIO"=>"%".$usuario."%"
+        ));
+    }
+    
+    public function login($usuario,$senha){
+        
+        $sql = new Sql();
+        
+        $results = $sql->select("SELECT * FROM usuarios WHERE usuario = :USUARIO AND senha = :SENHA", array(
+           ":USUARIO"=>$usuario,
+           ":SENHA"=>$senha
+        ));
+        
+        
+        if (count($results) > 0) {
+            $row = $results[0];
+            
+            $this->setIdUsuario($row['idUsuario']);
+            $this->setUsuario($row['usuario']);
+            $this->setSenha($row['senha']);
+        } else {
+            throw new Exception("Login e/ou Senha Inválidos");
         }
         
     }
